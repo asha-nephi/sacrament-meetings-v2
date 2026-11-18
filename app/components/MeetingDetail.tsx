@@ -20,6 +20,9 @@ function Section({
 }
 
 export default function MeetingDetail({ meeting }: { meeting: SacramentMeeting }) {
+  const hasSacramentProgram =
+    meeting.meetingType !== "stake" && meeting.meetingType !== "general";
+
   return (
     <article className="rounded-card border border-border bg-surface p-6 shadow-sm print:border-0 print:p-0 print:shadow-none">
       <header>
@@ -48,12 +51,20 @@ export default function MeetingDetail({ meeting }: { meeting: SacramentMeeting }
         </Section>
       )}
 
-      <Section title="Opening">
-        <p className="text-sm">
-          Hymn {meeting.openingHymn.number}: {meeting.openingHymn.title}
-        </p>
-        <p className="text-sm text-muted">Prayer: {meeting.openingPrayer}</p>
-      </Section>
+      {hasSacramentProgram ? (
+        <Section title="Opening">
+          <p className="text-sm">
+            Hymn {meeting.openingHymn.number}: {meeting.openingHymn.title}
+          </p>
+          <p className="text-sm text-muted">Prayer: {meeting.openingPrayer}</p>
+        </Section>
+      ) : (
+        <Section title="Program">
+          <p className="text-sm text-muted">
+            This is a non-sacrament meeting, so there is no local program.
+          </p>
+        </Section>
+      )}
 
       {meeting.wardBusiness.length > 0 && (
         <Section title="Ward Business">
@@ -65,11 +76,13 @@ export default function MeetingDetail({ meeting }: { meeting: SacramentMeeting }
         </Section>
       )}
 
-      <Section title="Sacrament Hymn">
-        <p className="text-sm">
-          Hymn {meeting.sacramentHymn.number}: {meeting.sacramentHymn.title}
-        </p>
-      </Section>
+      {hasSacramentProgram && (
+        <Section title="Sacrament Hymn">
+          <p className="text-sm">
+            Hymn {meeting.sacramentHymn.number}: {meeting.sacramentHymn.title}
+          </p>
+        </Section>
+      )}
 
       {meeting.speakers.length > 0 && (
         <Section title="Program">
@@ -90,12 +103,14 @@ export default function MeetingDetail({ meeting }: { meeting: SacramentMeeting }
         </Section>
       )}
 
-      <Section title="Closing">
-        <p className="text-sm">
-          Hymn {meeting.closingHymn.number}: {meeting.closingHymn.title}
-        </p>
-        <p className="text-sm text-muted">Prayer: {meeting.closingPrayer}</p>
-      </Section>
+      {hasSacramentProgram && (
+        <Section title="Closing">
+          <p className="text-sm">
+            Hymn {meeting.closingHymn.number}: {meeting.closingHymn.title}
+          </p>
+          <p className="text-sm text-muted">Prayer: {meeting.closingPrayer}</p>
+        </Section>
+      )}
     </article>
   );
 }
